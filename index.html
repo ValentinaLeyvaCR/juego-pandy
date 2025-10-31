@@ -251,20 +251,46 @@ const btnMix=document.getElementById("btnMix");
 const overlay=document.getElementById("overlay");
 const endText=document.getElementById("endText");
 
-// --- ▼▼▼ AQUÍ ESTÁ LA CORRECCIÓN ▼▼▼ ---
 const INGREDIENTS=[
   {emoji:'🥚',name:'Huevo'},
   {emoji:'🧈',name:'Mantequilla'},
   {emoji:'🍫',name:'Chocolate'},
-  {emoji:'🍓',name:'Fresas'}, // <-- ¡Corregido! (Quité la 'L' extra)
+  {emoji:'🍓',name:'Fresas'},
   {emoji:'🌈',name:'Confites'}
 ];
-// --- ▲▲▲ FIN DE LA CORRECCIÓN ▲▲▲ ---
 
 const shelf=document.getElementById('shelf');
 const bowl=document.getElementById('bowl');
 const mix=document.getElementById('mix');
 let added=0;
+
+// --- ▼▼▼ AQUÍ ESTÁ LA NUEVA FUNCIÓN DE REINICIO ▼▼▼ ---
+function resetGame() {
+  // 1. Reiniciar variables
+  added = 0;
+  
+  // 2. Reiniciar elementos visuales del juego
+  mix.style.height = '0%';
+  doneCount.textContent = `0 / ${INGREDIENTS.length}`;
+  stepHint.textContent = 'Agrega los ingredientes';
+  pandyTalk.textContent = '¡Vamos a hacer otra torta!'; // Mensaje de reinicio
+  
+  // 3. Reiniciar botones
+  btnMix.disabled = true;
+  btnMix.textContent = '🥄 Mezclar';
+
+  // 4. Volver a mostrar todos los ingredientes
+  const allIngredients = document.querySelectorAll('.ing');
+  allIngredients.forEach(ing => {
+    ing.classList.remove('used');
+  });
+
+  // 5. Ocultar certificado y mostrar a Pandy
+  document.getElementById('certificado').classList.remove('show');
+  document.getElementById('pandyContainer').style.display = 'flex';
+}
+// --- ▲▲▲ FIN DE LA FUNCIÓN DE REINICIO ▲▲▲ ---
+
 
 INGREDIENTS.forEach((ing)=>{
   const el=document.createElement('div');
@@ -328,9 +354,9 @@ document.getElementById('btnCert').addEventListener('click',()=>{
   document.getElementById('pandyContainer').style.display='none'; 
 });
 
+// --- ▼▼▼ CAMBIO EN EL BOTÓN DE CERRAR ▼▼▼ ---
 document.getElementById('btnCloseCert').addEventListener('click', () => {
-  document.getElementById('certificado').classList.remove('show');
-  document.getElementById('pandyContainer').style.display = 'flex'; 
+  resetGame(); // Llama a la función de reinicio en lugar de solo cerrar
 });
 
 </script>
