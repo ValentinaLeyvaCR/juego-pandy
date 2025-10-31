@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Ayuda a Pandy a preparar la torta</title>
+<style>
+  :root{
+    --sky:#e9f3ff;
+    --bg:#f7eaff;
+    --ink:#3a2a44;
+    --accent:#ff64b7;
+    --accent2:#8f7bff;
+    --mint:#7ad8b5;
+    --soft:#fff5fd;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+    color:var(--ink);
+    background:radial-gradient(1000px 540px at 50% 0%,var(--sky),var(--bg));
+  }
+  header{
+    text-align:center;
+    padding:14px 10px;
+    background:linear-gradient(90deg,#ffd5ef 0,#e6ddff 100%);
+    font-weight:900;
+    letter-spacing:.2px;
+    border-bottom:1px solid #ffffffb5;
+  }
+  header .sub{font-size:.95rem;opacity:.85;font-weight:700}
+  .wrap{max-width:680px;margin:14px auto;padding:0 12px}
+  .card{
+    background:linear-gradient(180deg,#ffffff 0,#fff7fd 100%);
+    border:1px solid #0001;
+    border-radius:18px;
+    padding:14px;
+    box-shadow:0 10px 28px rgba(128,73,136,.15);
+  }
+  .hud{
+    display:flex;gap:8px;justify-content:space-between;align-items:center;
+    padding:10px 12px;border:1px dashed #0002;border-radius:14px;background:#ffffffcc;font-weight:800
+  }
+  .pill{padding:6px 10px;border-radius:999px;background:#ffe3f4;font-size:.95rem}
+  .kitchen{position:relative;margin-top:12px;border:1px solid #0002;border-radius:18px;
+    overflow:hidden;padding:16px;min-height:520px;
+    background:linear-gradient(180deg,#fdfaff 0,#fff5fd 100%);
+  }
+  .pandy{
+    position:absolute;
+    right:16px;
+    bottom:80px;
+    z-index:2;
+    display:flex;
+    align-items:end;
+    gap:8px;
+  }
+  .pandy .talk{
+    position:relative;
+    background:#ffffffd8;
+    border:1px solid #0002;
+    border-radius:14px;
+    padding:8px 12px;
+    font-weight:800;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+  }
+  .pandy .talk::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    right: 32px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: #ffffffd8 transparent transparent transparent;
+    transform: rotate(45deg);
+  }
+  /* Ajustes para la imagen de Pandy en la cocina */
+  #pandyImage{
+    width: 100px; /* Ajusta el tamaño de la imagen */
+    height: auto;
+    object-fit: contain;
+    transform: translateY(5px); /* Pequeño ajuste para que se alinee mejor */
+  }
+  .stage{position:absolute;inset:80px 12px 110px 12px;display:grid;place-items:center}
+  .table{position:absolute;left:0;right:0;bottom:54px;height:70px;
+    background:linear-gradient(180deg,#ffe7f7,#ffd0ef);
+    border-top:2px solid #ffc0e9;border-bottom:2px solid #ffaadf;
+    box-shadow:inset 0 6px 0 #fff;
+  }
+  .bowl{position:relative;width:min(360px,70vw);aspect-ratio:5/3;
+    border-radius:0 0 160px 160px/0 0 120px 120px;
+    background:radial-gradient(60% 100% at 50% 10%,#ffe3f9,#ffc0ec);
+    border:4px solid #ff9bd8;
+    box-shadow:inset 0 -18px 42px rgba(255,255,255,.65),0 10px 24px rgba(0,0,0,.12);
+    overflow:hidden;
+  }
+  .mix{position:absolute;left:6%;right:6%;bottom:0;height:0%;
+    background:linear-gradient(180deg,#ffedc1,#ffd07a);
+    border-top:2px solid #ffe8b0;
+    transition:height .3s ease;
+  }
+  .shelf{
+    position:absolute;
+    left:12px;right:12px;top:12px;
+    display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+  }
+  .ing{
+    position:relative;display:grid;place-items:center;width:90px;height:90px;
+    border-radius:16px;border:2px solid #ffd1ef;background:#fff;
+    box-shadow:0 8px 18px rgba(0,0,0,.08);
+    font-size:2rem;user-select:none;
+    transition:transform .12s ease,opacity .2s ease;
+  }
+  .ing.used{opacity:.35;pointer-events:none;transform:scale(.92)}
+  .ing .label{position:absolute;bottom:6px;font-weight:900;font-size:.85rem;color:#6a57b7}
+  .mixRow{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center}
+  .btn{border:none;background:var(--accent);color:#fff;font-weight:900;border-radius:14px;
+    padding:12px 18px;min-width:160px;box-shadow:0 10px 22px rgba(255,100,183,.25)}
+  .btn.alt{background:var(--accent2)}
+  .overlay{position:absolute;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;padding:14px}
+  .overlay.show{display:flex}
+  .modal{width:min(520px,94%);background:linear-gradient(180deg,#fff,#fff5fd);border:1px solid #0002;
+    border-radius:18px;padding:14px;text-align:center;box-shadow:0 18px 40px rgba(0,0,0,.25)}
+  #certificado{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+    padding:12px;
+  }
+  #certificado.show{display:flex}
+  .sheet{width:min(560px,96%);background:#f0e4ff;color:#442a64;
+    border:1px solid #a48cff;border-radius:18px;padding:16px;
+    box-shadow:0 16px 40px rgba(70,45,105,.35)}
+  .frame{
+    border-radius:12px;padding:16px;
+    background:repeating-linear-gradient(90deg,var(--accent)0 6px,var(--accent2)6px 12px),
+    repeating-linear-gradient(var(--accent)0 6px,var(--accent2)6px 12px);
+    animation:borderRun 10s linear infinite;
+    box-shadow:inset 0 0 0 10px rgba(0,0,0,.07);
+  }
+  @keyframes borderRun{to{background-position:220px 0,0 220px}}
+  .paper{background:#fffefcea;border:1px solid #0002;border-radius:10px;padding:16px;text-align:center}
+  .title{color:var(--accent);text-transform:uppercase;font-weight:900;margin:.2rem 0}
+  .subtitle{font-weight:900;font-size:1.1rem;margin:.1rem 0 .6rem}
+
+  #pandyCertImage {
+    width: 80px; 
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 10px; 
+  }
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" src="gabby_fondo.mp3" preload="auto" loop></audio>
+
+<header>
+  <div>🎂 Ayuda a Pandy a preparar la torta</div>
+  <div class="sub">Toca los ingredientes para ponerlos en el bowl. ¡Luego mezcla y… magia! ✨</div>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <div class="hud">
+      <div class="pill">🧁 Ingredientes listos: <b id="doneCount">0 / 5</b></div>
+      <div class="pill">✨ Paso final: <b id="stepHint">Agrega los ingredientes</b></div>
+    </div>
+
+    <div class="kitchen">
+      <div class="shelf" id="shelf"></div>
+
+      <div class="stage">
+        <div class="bowl" id="bowl"><div class="mix" id="mix"></div></div>
+        <div class="table"></div>
+      </div>
+
+      <div class="pandy" id="pandyContainer">
+        <div class="talk" id="pandyTalk">“¡Yum yum! ¡Esto se ve delicioso!”</div>
+        <img id="pandyImage" src="pandy.png" alt="Pandy Guardagatos" />
+      </div>
+
+      <div class="mixRow">
+        <button class="btn" id="btnMix" disabled>🥄 Mezclar</button>
+      </div>
+
+      <div class="overlay" id="overlay">
+        <div class="modal">
+          <div style="font-size:2.2rem">🎉🎂</div>
+          <div style="margin:8px 0 10px;font-weight:900" id="endText">¡La torta está lista para la fiesta!</div>
+          <button class="btn" id="btnCert">Ver mi certificado</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="certificado">
+  <div class="sheet">
+    <div class="frame">
+      <div class="paper">
+        <img id="pandyCertImage" src="pandy.png" alt="Pandy Guardagatos" /> 
+        <h2 class="title">¡Feliz Cumpleaños!</h2>
+        <h3 class="subtitle">Para nuestra pastelera favorita:</h3>
+        
+        <p style="font-weight:900; font-size:1.4rem; color:var(--accent2); margin:10px 0;">
+          Maria Jose
+        </p>
+        
+        <p>¡Que tengas un día súper miau-tástico!</p>
+        <p>Te queremos mucho.</p>
+        
+        <p style="font-weight:900;margin-top:.6rem">
+          Con cariño,<br/>Luz Elena y Valentina 💜
+        </p>
+        
+        <div style="margin-top:16px;">
+          <button class="btn alt" id="btnCloseCert">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const music=document.getElementById("bgMusic");
+
+let musicStarted = false;
+
+function startMusic() {
+  if (musicStarted) return; 
+  try {
+    music.volume = 0.6;
+    music.play();
+    musicStarted = true;
+  } catch(e) {
+    console.error("Error al reproducir la música:", e);
+  }
+}
+
+const pandyTalk=document.getElementById("pandyTalk");
+const doneCount=document.getElementById("doneCount");
+const stepHint=document.getElementById("stepHint");
+const btnMix=document.getElementById("btnMix");
+const overlay=document.getElementById("overlay");
+const endText=document.getElementById("endText");
+
+// --- ▼▼▼ AQUÍ ESTÁ LA CORRECCIÓN ▼▼▼ ---
+const INGREDIENTS=[
+  {emoji:'🥚',name:'Huevo'},
+  {emoji:'🧈',name:'Mantequilla'},
+  {emoji:'🍫',name:'Chocolate'},
+  {emoji:'🍓',name:'Fresas'}, // <-- ¡Corregido! (Quité la 'L' extra)
+  {emoji:'🌈',name:'Confites'}
+];
+// --- ▲▲▲ FIN DE LA CORRECCIÓN ▲▲▲ ---
+
+const shelf=document.getElementById('shelf');
+const bowl=document.getElementById('bowl');
+const mix=document.getElementById('mix');
+let added=0;
+
+INGREDIENTS.forEach((ing)=>{
+  const el=document.createElement('div');
+  el.className='ing';
+  el.innerHTML=`<div>${ing.emoji}</div><div class="label">${ing.name}</div>`;
+  el.addEventListener('click',()=>{
+    
+    startMusic(); 
+
+    if(el.classList.contains('used'))return;
+    el.classList.add('used');
+    added++;
+    doneCount.textContent=`${added} / ${INGREDIENTS.length}`;
+    mix.style.height=Math.min(90,Math.floor(added/INGREDIENTS.length*90))+'%';
+    const frases={
+      '🥚':'¡Crack! ¡Un huevo mágico!',
+      '🧈':'¡Mantequilla suave como una nube!',
+      '🍫':'¡Chocolate! ¡Mi parte favorita!',
+      '🍓':'¡Fresitas dulces para la torta!',
+      '🌈':'¡Confites mágicos, qué colorido!'
+    };
+    pandyTalk.textContent=frases[ing.emoji]||'¡Qué delicioso!';
+    if(added===INGREDIENTS.length){
+      btnMix.disabled=false;
+      stepHint.textContent='¡Listo! Ahora toca “Mezclar”';
+      setTimeout(()=>{pandyTalk.textContent='¡Listo! ¡Hora de mezclar la magia! ✨';},1200);
+    }
+  });
+  shelf.appendChild(el);
+});
+
+btnMix.addEventListener('click',()=>{
+  startMusic(); 
+  
+  btnMix.textContent = 'Mezclando... 🥣';
+  btnMix.disabled = true;
+  pandyTalk.textContent = '¡Mezclando, mezclando!';
+
+  bowl.style.transition = 'transform 0.2s ease';
+  let i = 0;
+  const shake = setInterval(() => {
+    bowl.style.transform = `translateX(${Math.random() > 0.5 ? 5 : -5}px)`;
+    i++;
+    if (i > 8) {
+      clearInterval(shake);
+      bowl.style.transform = 'translateX(0)';
+      
+      setTimeout(() => {
+        endText.textContent='¡La torta está lista para la fiesta!';
+        overlay.classList.add('show');
+        pandyTalk.textContent='¡Qué linda torta hicimos juntas! 🎂💜';
+      }, 500);
+    }
+  }, 200);
+});
+
+document.getElementById('btnCert').addEventListener('click',()=>{
+  overlay.classList.remove('show');
+  const cert=document.getElementById('certificado');
+  cert.classList.add('show');
+  document.getElementById('pandyContainer').style.display='none'; 
+});
+
+document.getElementById('btnCloseCert').addEventListener('click', () => {
+  document.getElementById('certificado').classList.remove('show');
+  document.getElementById('pandyContainer').style.display = 'flex'; 
+});
+
+</script>
+</body>
+</html>
