@@ -15,10 +15,9 @@
     --soft:#fff5fd;
   }
   *{box-sizing:border-box}
-  /* --- CORRECCIÓN 1: 'height: 100%' se eliminó de aquí --- */
   
   body{
-    min-height: 100vh; /* <-- CORRECCIÓN 1: Añadido para mejor ajuste */
+    min-height: 100vh; 
     margin:0;
     font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
     color:var(--ink);
@@ -47,13 +46,13 @@
   }
   .pill{padding:6px 10px;border-radius:999px;background:#ffe3f4;font-size:.95rem}
   .kitchen{position:relative;margin-top:12px;border:1px solid #0002;border-radius:18px;
-    overflow:hidden;padding:16px;min-height:460px; /* <-- CORRECCIÓN 2: Reducido de 520px */
+    overflow:hidden;padding:16px;min-height:430px; /* <-- CAMBIO 1: Altura total reducida */
     background:linear-gradient(180deg,#fdfaff 0,#fff5fd 100%);
   }
   .pandy{
     position:absolute;
     right:16px;
-    bottom:70px; /* <-- CORRECCIÓN 3: Subido de 80px */
+    bottom:70px; /* Corregido de antes */
     z-index:2;
     display:flex;
     align-items:end;
@@ -78,14 +77,13 @@
     border-color: #ffffffd8 transparent transparent transparent;
     transform: rotate(45deg);
   }
-  /* Ajustes para la imagen de Pandy en la cocina */
   #pandyImage{
-    width: 100px; /* Ajusta el tamaño de la imagen */
+    width: 100px; 
     height: auto;
     object-fit: contain;
-    transform: translateY(5px); /* Pequeño ajuste para que se alinee mejor */
+    transform: translateY(5px); 
   }
-  .stage{position:absolute;inset:80px 12px 100px 12px;display:grid;place-items:center} /* <-- CORRECCIÓN 4: Ajustado de 110px */
+  .stage{position:absolute;inset:170px 12px 100px 12px;display:grid;place-items:center} /* <-- CAMBIO 2: 'top' es ahora 170px (antes 80px) */
   .table{position:absolute;left:0;right:0;bottom:54px;height:70px;
     background:linear-gradient(180deg,#ffe7f7,#ffd0ef);
     border-top:2px solid #ffc0e9;border-bottom:2px solid #ffaadf;
@@ -109,15 +107,15 @@
     display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
   }
   .ing{
-    position:relative;display:grid;place-items:center;width:90px;height:90px;
+    position:relative;display:grid;place-items:center;width:70px;height:70px; /* <-- CAMBIO 3: Achicado (antes 90px) */
     border-radius:16px;border:2px solid #ffd1ef;background:#fff;
     box-shadow:0 8px 18px rgba(0,0,0,.08);
-    font-size:2rem;user-select:none;
+    font-size:1.5rem;user-select:none; /* <-- CAMBIO 3: Achicado (antes 2rem) */
     transition:transform .12s ease,opacity .2s ease;
   }
   .ing.used{opacity:.35;pointer-events:none;transform:scale(.92)}
-  .ing .label{position:absolute;bottom:6px;font-weight:900;font-size:.85rem;color:#6a57b7}
-  .mixRow{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center} /* <-- CORRECCIÓN 5: Subido de 12px */
+  .ing .label{position:absolute;bottom:6px;font-weight:900;font-size:.75rem;color:#6a57b7} /* <-- CAMBIO 4: Achicado (antes .85rem) */
+  .mixRow{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center} /* Corregido de antes */
   .btn{border:none;background:var(--accent);color:#fff;font-weight:900;border-radius:14px;
     padding:12px 18px;min-width:160px;box-shadow:0 10px 22px rgba(255,100,183,.25)}
   .btn.alt{background:var(--accent2)}
@@ -266,33 +264,21 @@ const bowl=document.getElementById('bowl');
 const mix=document.getElementById('mix');
 let added=0;
 
-// --- ▼▼▼ AQUÍ ESTÁ LA NUEVA FUNCIÓN DE REINICIO ▼▼▼ ---
 function resetGame() {
-  // 1. Reiniciar variables
   added = 0;
-  
-  // 2. Reiniciar elementos visuales del juego
   mix.style.height = '0%';
   doneCount.textContent = `0 / ${INGREDIENTS.length}`;
   stepHint.textContent = 'Agrega los ingredientes';
-  pandyTalk.textContent = '¡Vamos a hacer otra torta!'; // Mensaje de reinicio
-  
-  // 3. Reiniciar botones
+  pandyTalk.textContent = '¡Vamos a hacer otra torta!';
   btnMix.disabled = true;
   btnMix.textContent = '🥄 Mezclar';
-
-  // 4. Volver a mostrar todos los ingredientes
   const allIngredients = document.querySelectorAll('.ing');
   allIngredients.forEach(ing => {
     ing.classList.remove('used');
   });
-
-  // 5. Ocultar certificado y mostrar a Pandy
   document.getElementById('certificado').classList.remove('show');
   document.getElementById('pandyContainer').style.display = 'flex';
 }
-// --- ▲▲▲ FIN DE LA FUNCIÓN DE REINICIO ▲▲▲ ---
-
 
 INGREDIENTS.forEach((ing)=>{
   const el=document.createElement('div');
@@ -356,9 +342,8 @@ document.getElementById('btnCert').addEventListener('click',()=>{
   document.getElementById('pandyContainer').style.display='none';  
 });
 
-// --- ▼▼▼ CAMBIO EN EL BOTÓN DE CERRAR ▼▼▼ ---
 document.getElementById('btnCloseCert').addEventListener('click', () => {
-  resetGame(); // Llama a la función de reinicio en lugar de solo cerrar
+  resetGame(); 
 });
 
 </script>
